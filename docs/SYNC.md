@@ -35,3 +35,7 @@ The LaunchAgent starts at login and is kept alive. Its standard output and error
 When fetch or push fails or times out, the daemon logs one generic network error and waits a randomized 30–60 seconds before retrying. Git cannot prompt for credentials from the daemon. A successful local commit is retained for a later push attempt. When a merge, rebase, cherry-pick, staged change, wrong branch, or remote divergence is present, automatic syncing pauses rather than changing the index or resolving the conflict. Stop the LaunchAgent, resolve the Git state manually, and restart it when `--status` reports a clean `main` checkout. No automatic rebase or conflict resolution is performed.
 
 Each successful source push may trigger the repository's configured CI or release workflows. Generated APKs and release archives remain outside this sync path.
+
+## 本机已启用
+
+本机已于 2026-11-03 安装并启用实时源码同步。保存代码后，文件稳定约 8 秒即自动提交并推送；电脑需处于登录、运行和联网状态。暂停：`./tools/install-sync.sh stop`；恢复：`./tools/install-sync.sh start`。修改版本号后，GitHub 将自动构建并发布新 Release，手机登录 GitHub 后手动下载更新。
