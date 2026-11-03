@@ -75,8 +75,20 @@ public final class AdVpnService extends VpnService {
                 .allowFamily(OsConstants.AF_INET6);
             if (Build.VERSION.SDK_INT >= 29) b.setMetered(false);
             b.setConfigureIntent(PendingIntent.getActivity(this, 3, new Intent(this, MainActivity.class), PendingIntent.FLAG_IMMUTABLE));
-            for (String pkg : AppState.prefs(this).getStringSet("dns_bypass_packages", Collections.emptySet())) {
-                try { b.addDisallowedApplication(pkg); } catch (android.content.pm.PackageManager.NameNotFoundException ignored) {}
+            Set<String> only = AppState.prefs(this).getStringSet("dns_only_packages", Collections.emptySet());
+            if (!only.isEmpty()) {
+                int added = 0;
+                for (String pkg : only) {
+                    try {
+                        android.content.pm.ApplicationInfo info = getPackageManager().getApplicationInfo(pkg, 0);
+                        if (info.enabled) { b.addAllowedApplication(pkg); added++; }
+                    } catch (android.content.pm.PackageManager.NameNotFoundException ignored) {}
+                }
+                if (added == 0) throw new IOException("指定应用未安装或已停用，请重新选择拦截范围");
+            } else {
+                for (String pkg : AppState.prefs(this).getStringSet("dns_bypass_packages", Collections.emptySet())) {
+                    try { b.addDisallowedApplication(pkg); } catch (android.content.pm.PackageManager.NameNotFoundException ignored) {}
+                }
             }
             final ParcelFileDescriptor thisTunnel;
             final ThreadPoolExecutor thisUdpWorkers, thisTcpWorkers;
@@ -224,6 +236,6 @@ public final class AdVpnService extends VpnService {
         }
         if (stoppedReader != null) stoppedReader.interrupt();
     }
-    @Override public void onRevoke() { finish("VPN 已被系统或其他 VPN 接管；开屏跳过仍可使用"); }
+    @Override public void onRevoke() { finish("VPN 已被系统或其他 VPN 接管，网络拦截已停止"); }
     @Override public void onDestroy() { shutdown(); super.onDestroy(); }
 }

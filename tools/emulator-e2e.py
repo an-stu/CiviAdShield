@@ -2,7 +2,7 @@
 """Exercise the signed app on an explicitly selected disposable Android emulator.
 
 Resets only CiviAdShield and the controlled fixture in that emulator. Never targets a phone.
-UI hierarchy inspection is forbidden while the accessibility service is under test.
+Production app under test is network-only and must declare no accessibility service.
 """
 from __future__ import annotations
 
@@ -17,14 +17,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 APP = 'cn.civi.adshield'
 FIXTURE = APP + '.fixture'
-SERVICE = APP + '/' + APP + '.SkipAccessibilityService'
 
 
 class Device:
     def __init__(self, serial: str, output: Path):
         self.serial, self.output = serial, output
         self.adb = ROOT / '.toolchain/android-sdk/platform-tools/adb'
-        self.accessibility_testing = False
         self.results = []
         output.mkdir(parents=True, exist_ok=True)
         assert self.text('shell', 'getprop', 'ro.kernel.qemu').strip() == '1', 'Refusing to reset a physical device'
@@ -55,7 +53,6 @@ class Device:
         (self.output/(name+'.png')).write_bytes(self.call('exec-out', 'screencap', '-p', binary=True))
 
     def dump(self):
-        assert not self.accessibility_testing, 'UIAutomation would disturb accessibility testing'
         self.text('shell', 'uiautomator', 'dump', '/sdcard/civi-window.xml', timeout=20)
         xml = self.text('exec-out', 'cat', '/sdcard/civi-window.xml')
         (self.output/'last-window.xml').write_text(xml)
@@ -81,9 +78,11 @@ class Device:
                 bounds=list(map(int,re.findall(r'\d+',n.get('bounds',''))))
                 if len(bounds)!=4 or bounds[2]<=bounds[0] or bounds[3]<=bounds[1]:
                     continue
+                if scroll and bounds[3]>self.height*.90:
+                    continue  # Scroll partially visible controls clear of system navigation.
                 return n
             if scroll:
-                self.text('shell', 'input', 'swipe', self.width//2, int(self.height*.80), self.width//2, int(self.height*.25), '300')
+                self.text('shell', 'input', 'swipe', self.width//2, int(self.height*.75), self.width//2, int(self.height*.45), '300')
         raise RuntimeError(f'View not found: text={text}, cls={cls}, rid={rid}')
 
     def click(self, text, scroll=False):
@@ -140,38 +139,17 @@ class Device:
         self.click('保存')
         time.sleep(.8)
 
-    def set_service(self, enabled):
-        if not enabled:
-            self.accessibility_testing = False
-        if enabled:
-            self.text('shell', 'settings', 'put', 'secure', 'enabled_accessibility_services', SERVICE)
-        else:
-            self.text('shell', 'settings', 'delete', 'secure', 'enabled_accessibility_services')
-        self.text('shell', 'settings', 'put', 'secure', 'accessibility_enabled', '1' if enabled else '0')
-        self.accessibility_testing = enabled
-        time.sleep(1)
-
-    def splash(self, scenario, expected, wait=3):
-        self.text('shell', 'input', 'keyevent', 'KEYCODE_HOME')
-        time.sleep(.5)
-        before=int(self.fixture_prefs().get('clicks_'+scenario, '0'))
-        self.text('shell', 'am', 'force-stop', FIXTURE)
-        self.text('shell', 'am', 'start', '-W', '-n', FIXTURE+'/.SplashFixtureActivity', '--es', 'scenario', scenario)
-        time.sleep(wait)
-        after=int(self.fixture_prefs().get('clicks_'+scenario, '0'))
-        self.screenshot('splash-'+scenario+'-'+str(expected))
-        self.check(after-before==expected, 'splash '+scenario+' expected '+str(expected)+' click(s)', {'before':before,'after':after})
-
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--serial',default='emulator-5554')
-    parser.add_argument('--apk',type=Path,default=ROOT/'dist/CiviAdShield-1.0.1.apk')
+    parser.add_argument('--apk',type=Path,default=ROOT/'dist/CiviAdShield-1.0.2.apk')
     parser.add_argument('--output',type=Path,default=ROOT/'docs/emulator-results')
     args=parser.parse_args()
     d=Device(args.serial,args.output)
     try:
-        d.set_service(False)
+        d.text('shell','settings','delete','secure','enabled_accessibility_services')
+        d.text('shell','settings','put','secure','accessibility_enabled','0')
         for pkg in (APP,FIXTURE):
             d.text('uninstall',pkg,check=False)
         d.text('install',args.apk,timeout=60)
@@ -212,32 +190,9 @@ def main():
         normal=d.probe('example.com','after-pause','223.5.5.5')
         d.dns_result(normal,False)
         d.check(normal['probes']['system_lookup'].get('valid'),'normal system networking after pause',normal['probes']['system_lookup'])
-        # An enabled service with an empty opt-in list must not click another app.
-        d.main();d.click('启用开屏跳过',scroll=True)
-        d.click('同意并前往设置');d.set_service(True)
-        bound=d.text('shell','dumpsys','accessibility')
-        (d.output/'accessibility-bound.txt').write_text(bound)
-        d.check('SkipAccessibilityService' in bound,'accessibility service registered')
-        d.splash('positive',0)
-        d.set_service(False)
-        d.main();d.click('选择要跳过的应用',scroll=True)
-        field=d.find(cls='android.widget.EditText');d.tap(field);d.text('shell','input','text',FIXTURE)
-        time.sleep(.5)
-        tree=d.dump()
-        options=[n for n in tree.iter('node') if FIXTURE in n.get('text','') and n.get('class')=='android.widget.CheckedTextView']
-        if not options:
-            raise RuntimeError('Fixture missing from opt-in app list')
-        d.tap(options[0]);d.click('保存')
-        d.check('已选择 1 个应用' in d.find(cls='android.widget.Switch').get('text','') or any('已选择 1 个应用' in n.get('text','') for n in d.dump().iter('node')),'selected application persists after search/save')
-        d.set_service(True)
-        for scenario in ('positive','english','repeat_button'):
-            d.splash(scenario,1)
-        for scenario in ('negative_label','negative_location','disabled_button','nonclickable_label'):
-            d.splash(scenario,0)
-        d.splash('late_button',0,wait=11)
-        d.set_service(False)
-        d.splash('positive',0)
-        d.set_service(True)
+        declared=d.text('shell','dumpsys','package',APP)
+        d.check('BIND_ACCESSIBILITY_SERVICE' not in declared and 'SkipAccessibilityService' not in declared,'production APK has no accessibility service')
+        d.check(d.text('shell','settings','get','secure','accessibility_enabled').strip()=='0','network protection tested with accessibility disabled')
         d.main();d.screenshot('04-final-dashboard')
         d.check('FATAL EXCEPTION' not in d.text('logcat','-d','-s','AndroidRuntime:E'),'no AndroidRuntime crashes in test log')
     except Exception:

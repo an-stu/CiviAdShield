@@ -15,3 +15,8 @@ release-artifacts/
 *.pem
 *.p12
 *.key
+
+*.pcap
+*.pcapng
+*.apk
+*.aab

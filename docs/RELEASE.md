@@ -1,6 +1,6 @@
 # GitHub 自动构建与发布
 
-仓库：https://github.com/an-stu/CiviAdShield（私有）。手机需登录有权限的 GitHub 账号，再从 Releases 下载 APK 手动覆盖安装。本应用不内置更新令牌，也不自动安装 APK。
+仓库：https://github.com/an-stu/CiviAdShield（公开）。手机可从 Releases 下载 APK 手动覆盖安装。本应用不内置更新令牌，也不自动安装 APK。
 
 ## 工作方式
 
@@ -12,8 +12,8 @@
 
 ## 发布下一个版本
 
-1. 先完成代码和测试，可在 `docs/releases/v1.0.2.md` 写本次发布说明。
-2. 最后修改 `app/build.gradle` 的 `versionName`（例如 `1.0.2`）与递增的 `versionCode`（例如 `3`），表示这个版本可以发布。
+1. 先完成代码和测试，可在 `docs/releases/v1.0.3.md` 写本次发布说明。
+2. 最后修改 `app/build.gradle` 的 `versionName`（例如 `1.0.3`）与递增的 `versionCode`（例如 `4`），表示这个版本可以发布。
 3. 将变更同步到 `main`，等待 Actions 成功。若启用本机自动同步，保存文件并保持电脑联网即可。
 4. 在 [Releases](https://github.com/an-stu/CiviAdShield/releases) 下载新 APK，手机手动覆盖安装。
 

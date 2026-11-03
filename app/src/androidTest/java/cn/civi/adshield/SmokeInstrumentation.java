@@ -15,10 +15,15 @@ public final class SmokeInstrumentation extends Instrumentation {
     @Override public void onCreate(Bundle args) { super.onCreate(args); start(); }
     @Override public void onStart() {
         Context c=getTargetContext(); String beforeCustom="", beforeAllow="";
+        Set<String> beforeOnly=new HashSet<>(AppState.prefs(c).getStringSet("dns_only_packages",Collections.emptySet()));
+        Set<String> beforeBypass=new HashSet<>(AppState.prefs(c).getStringSet("dns_bypass_packages",Collections.emptySet()));
         Bundle result=new Bundle(); int resultCode=-1;
         try {
             beforeCustom=RulesStore.read(c,false); beforeAllow=RulesStore.read(c,true);
             startActivitySync(new Intent(c,MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)); waitForIdleSync();
+            AppState.prefs(c).edit().remove("dns_only_packages").remove("dns_bypass_packages").apply();
+            android.content.pm.ServiceInfo[] services=c.getPackageManager().getPackageInfo(c.getPackageName(),android.content.pm.PackageManager.GET_SERVICES).services;
+            check(services==null || Arrays.stream(services).noneMatch(s -> "android.permission.BIND_ACCESSIBILITY_SERVICE".equals(s.permission)),"No accessibility service declared");
             RulesStore.save(c,false,"probe.adshield.invalid\n"); RulesStore.save(c,true,"allowed.probe.adshield.invalid\n");
             check(RulesStore.get(c).blocks("probe.adshield.invalid"),"custom domain blocks");
             check(!RulesStore.get(c).blocks("allowed.probe.adshield.invalid"),"whitelist precedence");
@@ -63,6 +68,11 @@ public final class SmokeInstrumentation extends Instrumentation {
                 runOnMainSync(() -> AdVpnService.requestStop(c));
                 waitUntil(() -> !AppState.running && !AppState.starting,5000,"VPN repeat stop "+cycle);
             }
+            AppState.prefs(c).edit().putStringSet("dns_only_packages",Collections.singleton("cn.civi.adshield.uninstalled.testtarget")).apply();
+            runOnMainSync(() -> c.startForegroundService(new Intent(c,AdVpnService.class)));
+            waitUntil(() -> !AppState.starting && !AppState.running && AppState.status.contains("指定应用未安装"),5000,"Missing selected app fails closed");
+            android.net.NetworkCapabilities afterMissing=cm.getNetworkCapabilities(cm.getActiveNetwork());
+            check(afterMissing==null || !afterMissing.hasTransport(android.net.NetworkCapabilities.TRANSPORT_VPN),"Missing selected app does not become a global VPN");
             result.putString("stream","\nPASS " + passed.size() + " integration checks:\n" + String.join("\n",passed)+"\n");
         } catch(Throwable e) {
             resultCode=0;
@@ -70,6 +80,10 @@ public final class SmokeInstrumentation extends Instrumentation {
         } finally {
             if(AppState.running || AppState.starting) runOnMainSync(() -> AdVpnService.requestStop(c));
             try { RulesStore.save(c,false,beforeCustom); RulesStore.save(c,true,beforeAllow); } catch(IOException ignored) {}
+            android.content.SharedPreferences.Editor restore=AppState.prefs(c).edit().remove("dns_only_packages").remove("dns_bypass_packages");
+            if(!beforeOnly.isEmpty())restore.putStringSet("dns_only_packages",beforeOnly);
+            if(!beforeBypass.isEmpty())restore.putStringSet("dns_bypass_packages",beforeBypass);
+            restore.commit();
         }
         finish(resultCode,result);
     }

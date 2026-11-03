@@ -35,6 +35,8 @@ jobs:
           fi
       - name: Unit tests, lint, and test fixture
         run: ./gradlew :app:testDebugUnitTest :app:lintDebug :test-fixture:assembleDebug --no-daemon --console=plain
+      - name: Sync and packet-summary tests
+        run: python3 -m unittest discover -s tests -p 'test_*.py' -v
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:

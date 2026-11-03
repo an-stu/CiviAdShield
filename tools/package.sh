@@ -32,20 +32,29 @@ else
 fi
 "$PROJECT_ROOT/tools/build.sh" "$@" testDebugUnitTest lintDebug assembleRelease --console=plain
 mkdir -p "$PROJECT_ROOT/dist"
-cp "$PROJECT_ROOT/app/build/outputs/apk/release/app-release.apk" "$PROJECT_ROOT/dist/CiviAdShield-1.0.1.apk"
-"$PROJECT_ROOT/.toolchain/android-sdk/build-tools/35.0.0/apksigner" verify --verbose --print-certs "$PROJECT_ROOT/dist/CiviAdShield-1.0.1.apk"
+export CIVI_PACKAGE_VERSION=$(python3 - <<'VERSION_PY'
+import json,os,pathlib,re
+root=pathlib.Path(os.environ['CIVI_PROJECT_ROOT'])
+version=json.loads((root/'app/build/outputs/apk/release/output-metadata.json').read_text())['elements'][0]['versionName']
+if not re.fullmatch(r'[0-9]+\.[0-9]+\.[0-9]+(?:-[A-Za-z0-9.-]+)?',version):raise SystemExit('Invalid APK version')
+print(version)
+VERSION_PY
+)
+cp "$PROJECT_ROOT/app/build/outputs/apk/release/app-release.apk" "$PROJECT_ROOT/dist/CiviAdShield-${CIVI_PACKAGE_VERSION}.apk"
+"$PROJECT_ROOT/.toolchain/android-sdk/build-tools/35.0.0/apksigner" verify --verbose --print-certs "$PROJECT_ROOT/dist/CiviAdShield-${CIVI_PACKAGE_VERSION}.apk"
 python3 - <<'PY'
 import hashlib,os,pathlib,zipfile
 root=pathlib.Path(os.environ['CIVI_PROJECT_ROOT'])
 dest=root/'dist'
-with zipfile.ZipFile(dest/'CiviAdShield-1.0.1-source.zip','w',zipfile.ZIP_DEFLATED) as z:
+version=os.environ['CIVI_PACKAGE_VERSION']
+with zipfile.ZipFile(dest/f'CiviAdShield-{version}-source.zip','w',zipfile.ZIP_DEFLATED) as z:
     for p in sorted(root.rglob('*')):
         if not p.is_file(): continue
         rel=p.relative_to(root)
-        if any(x in {'.toolchain','.gradle','.git','.signing','build','dist','__pycache__'} for x in rel.parts): continue
-        if rel.name in {'local.properties','.DS_Store'}: continue
+        if any(x in {'.toolchain','.gradle','.git','.signing','build','dist','release-artifacts','__pycache__'} for x in rel.parts): continue
+        if rel.name in {'local.properties','.DS_Store'} or rel.name.startswith('.env') or p.suffix in {'.jks','.keystore','.key','.pem','.p12','.pcap','.pcapng','.apk','.aab'}: continue
         z.write(p,'CiviAdShield/'+str(rel))
-files=[dest/'CiviAdShield-1.0.1.apk',dest/'CiviAdShield-1.0.1-source.zip']
+files=[dest/f'CiviAdShield-{version}.apk',dest/f'CiviAdShield-{version}-source.zip']
 (dest/'SHA256SUMS.txt').write_text(''.join(hashlib.sha256(p.read_bytes()).hexdigest()+'  '+p.name+'\n' for p in files))
 print('APK and source package ready in '+str(dest))
 PY

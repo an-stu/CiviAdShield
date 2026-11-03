@@ -6,7 +6,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Only blocked domains are kept in memory; no screen content or browsing history is stored. */
+/** Only blocked-domain events are kept in memory; no browsing history is stored. */
 public final class AppState {
     private AppState() {}
     public static volatile boolean running;
@@ -24,6 +24,6 @@ public final class AppState {
     public static synchronized List<String> recent() { return new ArrayList<>(recent); }
     public static synchronized void clear(Context c) {
         recent.clear();
-        prefs(c).edit().putLong("blocked_count", 0).putInt("skip_count", 0).apply();
+        prefs(c).edit().putLong("blocked_count", 0).apply();
     }
 }

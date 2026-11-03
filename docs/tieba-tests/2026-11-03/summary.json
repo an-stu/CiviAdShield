@@ -1,0 +1,62 @@
+{
+  "date": "2026-11-03",
+  "timezone": "Asia/Shanghai",
+  "target": {
+    "package": "com.baidu.tieba",
+    "versionName": "22.13.1.1",
+    "versionCode": 369950981,
+    "apkSha256": "98545203220765504f8f23b55dd32fb49c1c5cef06ae80f0e83f533687a9106e",
+    "sourcePage": "https://c.tieba.baidu.com/c/s/download/pc?src=webtbGF"
+  },
+  "environment": {
+    "os": "AOSP Android 15",
+    "api": 35,
+    "abi": "arm64-v8a",
+    "network": "emulated cellular/WAN",
+    "accessibility_enabled": false,
+    "vpn_scope": [
+      "com.baidu.tieba"
+    ],
+    "host_dns_note": "Host network returns synthetic 198.18.0.0/16 A records; server-side ad fill and reachability not independently validated"
+  },
+  "scenario": "Official launcher first-run consent and guest public Xiaomi forum via declared VIEW route; public threads/images and scrolls",
+  "dns": {
+    "baseline_forum_external_blocklist_udp_dns_queries": 59,
+    "filtered_external_blocklist_udp_dns_queries": 0,
+    "app_counter_before": 16,
+    "app_counter_after_startup_and_forum": 100,
+    "app_counter_delta_startup_and_forum": 84,
+    "recent_blocked_domains": [
+      "sofire.bdstatic.com",
+      "open.e.kuaishou.com",
+      "open.e.kuaishou.cn",
+      "union-mlog.bigda.com",
+      "hlog.bigda.com",
+      "h2tcbox.baidu.com",
+      "appc.baidu.com",
+      "nsclick.baidu.com",
+      "als.baidu.com",
+      "afd.baidu.com",
+      "otheve.beacon.qq.com",
+      "api.tuisong.baidu.com",
+      "baidu-mipdx.cn.miaozhen.com",
+      "tcbox.baidu.com"
+    ],
+    "interpretation": "Counts include retries/tracking; not number of visible advertisements; unequal sampling windows do not establish an interception rate"
+  },
+  "ui": {
+    "public_forum_before": "loaded",
+    "public_forum_after": "loaded",
+    "ordinary_threads_and_images_after": "loaded",
+    "explicit_ad_labels_seen_before": 0,
+    "explicit_ad_labels_seen_after": 0,
+    "visual_ad_removal": "inconclusive_no_ad_card_sample",
+    "real_ad_click_redirect": "not_tested_no_ad_click_sample"
+  },
+  "limitations": [
+    "No Xiaomi/Redmi/POCO physical devices tested",
+    "DNS filtering cannot remove same-domain/response content or globally intercept explicit activity launches",
+    "No accessibility auto-click or default-browser takeover used",
+    "Raw packet captures, account identifiers, forum post contents and third-party APK are not committed"
+  ]
+}
