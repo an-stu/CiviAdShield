@@ -70,6 +70,8 @@ class LiveSyncPolicyTests(unittest.TestCase):
         self.assertTrue(live_sync.is_candidate_path("app/src/main/A.java", False))
         self.assertTrue(live_sync.is_candidate_path("app/src/main/assets/rules.txt", False))
         self.assertTrue(live_sync.is_candidate_path("docs/SYNC.md", False))
+        self.assertTrue(live_sync.is_candidate_path("docs/releases/v1.0.2.md", False))
+        self.assertFalse(live_sync.is_candidate_path("docs/releases/token.key", False))
         self.assertTrue(live_sync.is_candidate_path("tools/live-sync.py", False))
         self.assertFalse(live_sync.is_candidate_path("docs/runtime.json", False))
         self.assertFalse(live_sync.is_candidate_path("docs/subdir/SYNC.md", False))

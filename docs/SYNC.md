@@ -6,7 +6,7 @@ The daemon polls every 2 seconds and waits until candidate files have had stable
 
 ## Files eligible for sync
 
-The source roots are `app/`, `test-fixture/`, `gradle/wrapper/`, `tools/`, `.github/`, and `tests/`, restricted to `.java`, `.kt`, `.xml`, `.gradle`, `.properties`, `.py`, `.sh`, `.yml`, `.yaml`, `.md`, `.txt`, and `.bat` files. `docs/` contributes only direct `*.md` files. At the project root, the allowlist is `README.md`, `LICENSE`, `THIRD_PARTY_NOTICES.md`, `PERMISSIONS.md`, `VALIDATION.md`, `SETUP-NOTES.txt` when already tracked, `.gitignore`, `settings.gradle`, `build.gradle`, `gradle.properties`, `gradlew`, and `gradlew.bat`. The tracked `gradle/wrapper/gradle-wrapper.jar` is the only binary allowed.
+The source roots are `app/`, `test-fixture/`, `gradle/wrapper/`, `tools/`, `.github/`, and `tests/`, restricted to `.java`, `.kt`, `.xml`, `.gradle`, `.properties`, `.py`, `.sh`, `.yml`, `.yaml`, `.md`, `.txt`, and `.bat` files. Documentation includes direct `docs/*.md` files and `docs/releases/*.md` release notes. At the project root, the allowlist is `README.md`, `LICENSE`, `THIRD_PARTY_NOTICES.md`, `PERMISSIONS.md`, `VALIDATION.md`, `SETUP-NOTES.txt` when already tracked, `.gitignore`, `settings.gradle`, `build.gradle`, `gradle.properties`, `gradlew`, and `gradlew.bat`. The tracked `gradle/wrapper/gradle-wrapper.jar` is the only binary allowed.
 
 Generated files and local state are excluded, including `.git`, `.gradle`, `.toolchain`, `.signing`, `dist`, `build`, `local.properties`, environment files, keys, certificates, PEM files, JKS files, and keystores. Other extensions such as APKs, images, runtime JSON, and logs are outside the allowlist. Text assets under `app/` are source data and can sync.
 

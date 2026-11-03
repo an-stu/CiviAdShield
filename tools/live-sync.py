@@ -142,7 +142,9 @@ def is_candidate_path(relative: str, tracked: bool) -> bool:
         if relative == "SETUP-NOTES.txt" and not tracked:
             return False
         return True
-    if len(parts) == 2 and parts[0] == "docs" and path.suffix.lower() == ".md":
+    if path.suffix.lower() == ".md" and (
+            (len(parts) == 2 and parts[0] == "docs")
+            or (len(parts) == 3 and parts[:2] == ("docs", "releases"))):
         return True
     in_source_root = any(relative.startswith(root + "/") for root in SOURCE_ROOTS)
     if not in_source_root:
