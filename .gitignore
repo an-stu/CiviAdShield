@@ -1,0 +1,17 @@
+.gradle/
+.toolchain/
+local.properties
+**/build/
+*.jks
+*.keystore
+.DS_Store
+dist/
+.signing/
+__pycache__/
+.pytest_cache/
+release-artifacts/
+.env
+.env.*
+*.pem
+*.p12
+*.key

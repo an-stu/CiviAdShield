@@ -1,0 +1,37 @@
+plugins { id 'com.android.application' }
+def signingFile = rootProject.file('.signing/signing.properties')
+def localSigning = new Properties()
+if (signingFile.exists()) signingFile.withInputStream { localSigning.load(it) }
+android {
+    namespace 'cn.civi.adshield'
+    compileSdk 35
+    defaultConfig {
+        applicationId 'cn.civi.adshield'
+        minSdk 26
+        targetSdk 35
+        versionCode 2
+        versionName '1.0.1'
+        resValue 'string', 'app_version', versionName
+        testInstrumentationRunner 'cn.civi.adshield.SmokeInstrumentation'
+    }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+    signingConfigs {
+        if (signingFile.exists()) {
+            personalRelease {
+                storeFile file(localSigning['storeFile'])
+                storePassword localSigning['storePassword']
+                keyAlias localSigning['keyAlias']
+                keyPassword localSigning['keyPassword']
+            }
+        }
+    }
+    buildTypes { release { minifyEnabled false; if (signingFile.exists()) signingConfig signingConfigs.personalRelease } }
+    lint { abortOnError true; checkReleaseBuilds true }
+}
+dependencies {
+    // Optional local copies of the same test jars for networks where Java TLS is interrupted.
+    if (providers.gradleProperty('civiTestLibs').isPresent()) {
+        def testLibs = rootProject.file(providers.gradleProperty('civiTestLibs').get())
+        testImplementation files(new File(testLibs, 'junit-4.13.2.jar'), new File(testLibs, 'hamcrest-core-1.3.jar'))
+    } else { testImplementation 'junit:junit:4.13.2' }
+}

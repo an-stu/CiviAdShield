@@ -1,0 +1,49 @@
+{
+  "token": "custom-block",
+  "host": "example.com",
+  "resolver": "10.111.0.2",
+  "probes": {
+    "udp_a": {
+      "transport": "udp",
+      "recordType": "A",
+      "id": 61925,
+      "question": "example.com",
+      "valid": true,
+      "matchedId": 61925,
+      "matchedQuestion": "example.com",
+      "rcode": 0,
+      "answerCount": 0,
+      "durationMillis": 9
+    },
+    "udp_aaaa": {
+      "transport": "udp",
+      "recordType": "AAAA",
+      "id": 34996,
+      "question": "example.com",
+      "valid": true,
+      "matchedId": 34996,
+      "matchedQuestion": "example.com",
+      "rcode": 0,
+      "answerCount": 0,
+      "durationMillis": 1
+    },
+    "tcp_a": {
+      "transport": "tcp",
+      "recordType": "A",
+      "id": 16590,
+      "question": "example.com",
+      "valid": true,
+      "matchedId": 16590,
+      "matchedQuestion": "example.com",
+      "rcode": 0,
+      "answerCount": 0,
+      "durationMillis": 1
+    },
+    "system_lookup": {
+      "host": "example.com",
+      "valid": false,
+      "exception": "UnknownHostException: Unable to resolve host \"example.com\": No address associated with hostname",
+      "durationMillis": 4
+    }
+  }
+}

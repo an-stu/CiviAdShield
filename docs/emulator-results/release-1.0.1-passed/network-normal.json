@@ -1,0 +1,51 @@
+{
+  "token": "normal",
+  "host": "example.com",
+  "resolver": "10.111.0.2",
+  "probes": {
+    "udp_a": {
+      "transport": "udp",
+      "recordType": "A",
+      "id": 24202,
+      "question": "example.com",
+      "valid": true,
+      "matchedId": 24202,
+      "matchedQuestion": "example.com",
+      "rcode": 0,
+      "answerCount": 1,
+      "durationMillis": 6
+    },
+    "udp_aaaa": {
+      "transport": "udp",
+      "recordType": "AAAA",
+      "id": 3300,
+      "question": "example.com",
+      "valid": true,
+      "matchedId": 3300,
+      "matchedQuestion": "example.com",
+      "rcode": 0,
+      "answerCount": 0,
+      "durationMillis": 9
+    },
+    "tcp_a": {
+      "transport": "tcp",
+      "recordType": "A",
+      "id": 27685,
+      "question": "example.com",
+      "valid": true,
+      "matchedId": 27685,
+      "matchedQuestion": "example.com",
+      "rcode": 0,
+      "answerCount": 1,
+      "durationMillis": 3
+    },
+    "system_lookup": {
+      "host": "example.com",
+      "valid": true,
+      "addresses": [
+        "198.18.0.102"
+      ],
+      "durationMillis": 11
+    }
+  }
+}

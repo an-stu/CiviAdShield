@@ -1,0 +1,135 @@
+Activity Resolver Table:
+  Non-Data Actions:
+      android.intent.action.MAIN:
+        8fc695d cn.civi.adshield/.MainActivity filter 68162d2
+          Action: "android.intent.action.MAIN"
+          Category: "android.intent.category.LAUNCHER"
+
+Service Resolver Table:
+  Non-Data Actions:
+      android.net.VpnService:
+        19f3fa3 cn.civi.adshield/.AdVpnService filter 143f2a0 permission android.permission.BIND_VPN_SERVICE
+          Action: "android.net.VpnService"
+      android.accessibilityservice.AccessibilityService:
+        59b3e59 cn.civi.adshield/.SkipAccessibilityService filter 1eeda1e permission android.permission.BIND_ACCESSIBILITY_SERVICE
+          Action: "android.accessibilityservice.AccessibilityService"
+
+Domain verification status:
+
+Key Set Manager:
+  [cn.civi.adshield]
+      Signing KeySets: 23
+
+Packages:
+  Package [cn.civi.adshield] (a374255):
+    appId=10159
+    pkg=Package{27b546a cn.civi.adshield}
+    codePath=/data/app/~~zrZLch0l4yb46eAPXYlqzw==/cn.civi.adshield-dHRMLL9D_9rJS8NqIJbb6w==
+    resourcePath=/data/app/~~zrZLch0l4yb46eAPXYlqzw==/cn.civi.adshield-dHRMLL9D_9rJS8NqIJbb6w==
+    legacyNativeLibraryDir=/data/app/~~zrZLch0l4yb46eAPXYlqzw==/cn.civi.adshield-dHRMLL9D_9rJS8NqIJbb6w==/lib
+    extractNativeLibs=false
+    primaryCpuAbi=null
+    secondaryCpuAbi=null
+    cpuAbiOverride=null
+    versionCode=2 minSdk=26 targetSdk=35
+    minExtensionVersions=[]
+    versionName=1.0.1
+    hiddenApiEnforcementPolicy=2
+    usesNonSdkApi=false
+    splits=[base]
+    apkSigningVersion=2
+    flags=[ HAS_CODE ALLOW_CLEAR_USER_DATA ]
+    privateFlags=[ PRIVATE_FLAG_ACTIVITIES_RESIZE_MODE_RESIZEABLE_VIA_SDK_VERSION ALLOW_AUDIO_PLAYBACK_CAPTURE PRIVATE_FLAG_ALLOW_NATIVE_HEAP_POINTER_TAGGING ]
+    forceQueryable=false
+    queriesIntents=[Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] }]
+    scannedAsStoppedSystemApp=false
+    supportsScreens=[small, medium, large, xlarge, resizeable, anyDensity]
+    timeStamp=2026-11-03 17:27:38
+    lastUpdateTime=2026-11-03 17:27:38
+    installerPackageName=null
+    installerPackageUid=-1
+    initiatingPackageName=com.android.shell
+    originatingPackageName=null
+    packageSource=1
+    appMetadataFilePath=null
+    appMetadataSource=0
+    signatures=PackageSignatures{6376d5b version:2, signatures:[ec40dcb7], past signatures:[]}
+    installPermissionsFixed=false
+    pkgFlags=[ HAS_CODE ALLOW_CLEAR_USER_DATA ]
+    privatePkgFlags=[ PRIVATE_FLAG_ACTIVITIES_RESIZE_MODE_RESIZEABLE_VIA_SDK_VERSION ALLOW_AUDIO_PLAYBACK_CAPTURE PRIVATE_FLAG_ALLOW_NATIVE_HEAP_POINTER_TAGGING ]
+    apexModuleName=null
+    requested permissions:
+      android.permission.POST_NOTIFICATIONS
+      android.permission.FOREGROUND_SERVICE
+      android.permission.FOREGROUND_SERVICE_SPECIAL_USE
+      android.permission.INTERNET
+      android.permission.ACCESS_NETWORK_STATE
+    install permissions:
+      android.permission.FOREGROUND_SERVICE: granted=true
+      android.permission.FOREGROUND_SERVICE_SPECIAL_USE: granted=true
+      android.permission.INTERNET: granted=true
+      android.permission.ACCESS_NETWORK_STATE: granted=true
+    User 0: ceDataInode=352277 deDataInode=98412 installed=true hidden=false suspended=false distractionFlags=0 stopped=false notLaunched=false enabled=0 instant=false virtual=false quarantined=false
+      installReason=0
+      dataDir=/data/user/0/cn.civi.adshield
+      firstInstallTime=2026-11-03 17:27:38
+      uninstallReason=0
+      overlay paths:
+        /product/overlay/EmulationPixel7/EmulationPixel7Overlay.apk
+      legacy overlay paths:
+        /product/overlay/EmulationPixel7/EmulationPixel7Overlay.apk
+      gids=[3003]
+      runtime permissions:
+        android.permission.POST_NOTIFICATIONS: granted=true, flags=[ USER_SET|USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED]
+
+Queries:
+  system apps queryable: false
+  queries via forceQueryable:
+  queries via package name:
+    cn.civi.adshield:
+      cn.civi.adshield.test
+    cn.civi.adshield.test:
+      cn.civi.adshield
+  queries via component:
+    com.android.settings.intelligence:
+      cn.civi.adshield
+    cn.civi.adshield:
+      com.android.contacts
+      com.android.dialer
+      org.chromium.webview_shell
+      com.android.quicksearchbox
+      com.android.calendar
+      com.android.deskclock
+      com.android.gallery3d
+      com.android.inputmethod.latin
+      com.android.camera2
+      com.android.cellbroadcastreceiver.module
+      cn.civi.adshield.fixture
+  queryable via interaction:
+    User 0:
+      [com.android.dynsystem,com.android.DeviceAsWebcam,com.android.server.telecom,com.android.localtransport,com.android.providers.settings,com.android.settings,com.android.location.fused,com.android.inputdevices,android,com.android.keychain,com.android.emulator.multidisplay]:
+        cn.civi.adshield
+      com.android.vpndialogs:
+        cn.civi.adshield
+      com.android.inputmethod.latin:
+        cn.civi.adshield
+      com.android.systemui:
+        cn.civi.adshield
+      com.android.permissioncontroller:
+        cn.civi.adshield
+      android.ext.services:
+        cn.civi.adshield
+      cn.civi.adshield:
+        [com.android.dynsystem,com.android.DeviceAsWebcam,com.android.server.telecom,com.android.localtransport,com.android.providers.settings,com.android.settings,com.android.location.fused,com.android.inputdevices,android,com.android.keychain,com.android.emulator.multidisplay]
+  queryable via uses-library:
+
+Dexopt state:
+  [cn.civi.adshield]
+    path: /data/app/~~zrZLch0l4yb46eAPXYlqzw==/cn.civi.adshield-dHRMLL9D_9rJS8NqIJbb6w==/base.apk
+      arm64: [status=verify] [reason=install] [primary-abi]
+        [location is /data/app/~~zrZLch0l4yb46eAPXYlqzw==/cn.civi.adshield-dHRMLL9D_9rJS8NqIJbb6w==/oat/arm64/base.odex]
+
+Compiler stats:
+  [cn.civi.adshield]
+     base.apk - 152
+ACTIVATE_VPN: allow; time=+1m34s972ms ago; rejectTime=+4m25s780ms ago

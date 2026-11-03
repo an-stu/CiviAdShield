@@ -1,0 +1,27 @@
+
+PASS 24 integration checks:
+custom domain blocks
+whitelist precedence
+Clash export preserves subdomain whitelist
+VPN authorization prepared
+VPN starts (广告域名拦截运行中)
+VPN routes active for test process (广告域名拦截运行中)
+UDP A locally blocked
+UDP AAAA locally blocked
+TCP DNS locally blocked
+normal DNS forwarded
+system DNS resolution works
+VPN stops cleanly (已暂停，可使用 Clash Meta)
+restart authorization 0
+VPN restart 0 (广告域名拦截运行中)
+restarted tunnel survives old-reader cleanup 0
+VPN repeat stop 0 (已暂停，可使用 Clash Meta)
+restart authorization 1
+VPN restart 1 (广告域名拦截运行中)
+restarted tunnel survives old-reader cleanup 1
+VPN repeat stop 1 (已暂停，可使用 Clash Meta)
+restart authorization 2
+VPN restart 2 (广告域名拦截运行中)
+restarted tunnel survives old-reader cleanup 2
+VPN repeat stop 2 (已暂停，可使用 Clash Meta)
+

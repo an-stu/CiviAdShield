@@ -1,0 +1,12 @@
+pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        // Optional local, official-artifact cache for this machine's interrupted Java TLS downloads.
+        if (file('.toolchain/maven').isDirectory()) maven { url = uri('.toolchain/maven') }
+        google(); mavenCentral()
+    }
+}
+rootProject.name = 'CiviAdShield'
+include ':app'
+include ':test-fixture'

@@ -1,0 +1,51 @@
+{
+  "token": "builtin-ad",
+  "host": "ad.xiaomi.com",
+  "resolver": "10.111.0.2",
+  "probes": {
+    "udp_a": {
+      "transport": "udp",
+      "recordType": "A",
+      "id": 34868,
+      "question": "ad.xiaomi.com",
+      "valid": true,
+      "matchedId": 34868,
+      "matchedQuestion": "ad.xiaomi.com",
+      "rcode": 0,
+      "answerCount": 0,
+      "durationMillis": 2
+    },
+    "udp_aaaa": {
+      "transport": "udp",
+      "recordType": "AAAA",
+      "id": 44358,
+      "question": "ad.xiaomi.com",
+      "valid": true,
+      "matchedId": 44358,
+      "matchedQuestion": "ad.xiaomi.com",
+      "rcode": 0,
+      "answerCount": 0,
+      "durationMillis": 0
+    },
+    "tcp_a": {
+      "transport": "tcp",
+      "recordType": "A",
+      "id": 64705,
+      "question": "ad.xiaomi.com",
+      "valid": true,
+      "matchedId": 64705,
+      "matchedQuestion": "ad.xiaomi.com",
+      "rcode": 0,
+      "answerCount": 0,
+      "durationMillis": 3
+    },
+    "system_lookup": {
+      "host": "example.com",
+      "valid": true,
+      "addresses": [
+        "198.18.0.102"
+      ],
+      "durationMillis": 10
+    }
+  }
+}

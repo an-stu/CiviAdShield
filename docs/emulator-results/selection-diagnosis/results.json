@@ -1,0 +1,10 @@
+[
+  {
+    "test": "splash positive expected 1 click(s)",
+    "passed": true,
+    "detail": {
+      "before": 0,
+      "after": 1
+    }
+  }
+]

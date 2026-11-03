@@ -1,0 +1,35 @@
+VPNs:
+  0: cn.civi.adshield
+    Active package name: cn.civi.adshield
+    Active vpn type: -1
+    NetworkCapabilities: [ Transports: VPN Capabilities: NOT_METERED&INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED TransportInfo: <VpnTransportInfo{type=-1, sessionId=null, bypassable=false longLivedTcpConnectionsExpensive=false}> OwnerUid: 10159 AdminUids: [10159] UnderlyingNetworks: Null]
+    
+    mCachedCarrierConfigInfoPerSubId={}
+    mEventChanges (most recent first):
+      2026-11-03T17:30:42.324059 - [UnderlyingNW] Switch to null
+      2026-11-03T17:30:41.004955 - [UnderlyingNW] Switch to null
+      2026-11-03T17:30:39.731262 - [UnderlyingNW] Switch to null
+      2026-11-03T17:30:39.674415 - [UnderlyingNW] Switch to null
+      2026-11-03T17:27:57.056187 - [UnderlyingNW] Switch to null
+      2026-11-03T17:25:10.999203 - [UnderlyingNW] Switch to null
+      2026-11-03T17:25:09.769740 - [UnderlyingNW] Switch to null
+      2026-11-03T17:25:08.392383 - [UnderlyingNW] Switch to null
+      2026-11-03T17:25:08.232941 - [UnderlyingNW] Switch to null
+      2026-11-03T17:22:29.166344 - [UnderlyingNW] Switch to null
+      2026-11-03T17:22:27.907875 - [UnderlyingNW] Switch to null
+      2026-11-03T17:22:27.759715 - [UnderlyingNW] Switch to null
+      2026-11-03T17:19:12.268424 - [UnderlyingNW] Switch to null
+      2026-11-03T17:19:10.950307 - [UnderlyingNW] Switch to null
+      2026-11-03T17:19:09.695081 - [UnderlyingNW] Switch to null
+      2026-11-03T17:19:09.533752 - [UnderlyingNW] Switch to null
+      2026-11-03T17:15:25.508726 - [UnderlyingNW] Switch to null
+      2026-11-03T16:56:15.880769 - [UnderlyingNW] Switch to null
+      2026-11-03T16:46:18.898163 - [UnderlyingNW] Switch to null
+      2026-11-03T16:41:56.069018 - [UnderlyingNW] Switch to null
+      2026-11-03T16:38:06.126988 - [UnderlyingNW] Switch to null
+      2026-11-03T16:38:04.816699 - [UnderlyingNW] Switch to null
+      2026-11-03T16:38:03.542194 - [UnderlyingNW] Switch to null
+      2026-11-03T16:38:03.402701 - [UnderlyingNW] Switch to null
+      2026-11-03T16:32:46.751735 - [UnderlyingNW] Switch to null
+      2026-11-03T16:30:33.726002 - [LockdownAlwaysOn] Mode changed: lockdown=false alwaysOn=false calling from 1000
+  

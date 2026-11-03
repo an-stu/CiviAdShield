@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">净屏</string>
+    <string name="counter_stats">%1$d 次拦截    /    %2$d 次跳过</string>
+    <string name="skip_state">已选择 %1$d 个应用 · %2$s</string>
+    <string name="rules_summary">内置 anti-AD %1$d 条 · 自定义 %2$d 条 · 白名单 %3$d 条\n内置版本 20261102061401 · 白名单优先</string>
+    <string name="skip_description">仅在你指定的应用进入前台后 8 秒内，查找屏幕右上角明确标注“跳过”或“跳过广告”的可点击按钮。会读取这些应用的界面节点并代你点击；不截屏、不上传内容。可随时在净屏中暂停，或在系统设置中关闭此服务。可能无法识别图片按钮或自绘界面。</string>
+</resources>

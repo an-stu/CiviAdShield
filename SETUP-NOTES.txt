@@ -1,0 +1,53 @@
+CiviAdShield local Android toolchain
+
+Install location
+- Android SDK root: .toolchain/android-sdk
+- Android platform: android-35 (API 35, extension level 13)
+- Android build-tools: 35.0.0
+- Android platform-tools: 37.0.1 (adb 37.0.1-15733141)
+- Android command-line tools: package revision 23.0; Android CLI 1.1.16717390
+- Android Emulator: 37.2.13.0, build 16740729, macOS aarch64
+- Java: OpenJDK 17.0.18 at /opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
+- Gradle wrapper: 8.14.3; distribution SHA-256 pinned in gradle/wrapper/gradle-wrapper.properties
+- Android Gradle Plugin: 8.12.0 (project configuration)
+
+Local emulator
+- AVD: CiviAdShield35, based on Pixel 7 hardware settings
+- Image: API 35 AOSP default, arm64-v8a, revision 2
+- Display: 1080 x 2400, density 420
+- AVD home: .toolchain/avd
+- Serial: emulator-5554
+- Headless emulator log: .toolchain/emulator.log
+- Start with: ./tools/emulator.sh
+
+The emulator script pins ANDROID_AVD_HOME and ANDROID_USER_HOME to project-local paths and starts the AVD on port 5554 with no window, audio, boot animation, or snapshot save. It uses swiftshader_indirect for rendering. The AVD image path is in the local AVD config under .toolchain/avd/CiviAdShield35.avd/config.ini.
+
+Run the default debug build with:
+  ./tools/build.sh
+
+The build script sets JAVA_HOME, ANDROID_HOME, ANDROID_SDK_ROOT, and the local SDK tools path. Pass Gradle tasks as arguments to run a different task. local.properties points to this checkout's SDK path and is machine-specific.
+
+Package integrity
+The command-line tools, Android 35 platform, build-tools 35.0.0, platform-tools, emulator, and system-image ZIPs were downloaded from dl.google.com and verified against Google repository metadata before extraction:
+- commandlinetools-mac_x86_64-16111833_latest.zip: SHA-1 112cf9618794a997ff273537d55bee02c22abffe
+- platform-35_r02.zip: SHA-1 0bb560a90a7a2cbd0dd8348224d518b638fe7949
+- build-tools_r35_macosx.zip: SHA-1 93ab8ce91230e067b5add4bfa79919c52b27f072
+- platform-tools_r37.0.1-darwin.zip: SHA-1 6ae73f4de6452dc57e62ec02b68eed92a4c21661
+- emulator-darwin_aarch64-16740729.zip (416,113,219 bytes): SHA-1 6c5e61b873e11c7d1d08683bea089f762baee070
+- arm64-v8a-35_r02.zip (769,099,654 bytes): SHA-1 2026a06409db630b56711afdbffb457c1dbaed49
+
+Initial SDK streaming downloads timed out. SDK packages were resumed as HTTP byte ranges, reassembled, and verified against Google's checksums. Unix executable permissions were restored from official ZIP metadata. The emulator and image archives were checksum-verified before extraction.
+
+Validation performed
+- `java --version`: OpenJDK 17.0.18
+- `./gradlew --version`: Gradle 8.14.3
+- `android --version`: 1.1.16717390 (Android CLI)
+- `adb version`: 37.0.1-15733141, running on Darwin arm64
+- `aapt2 version`: 2.19-11948202
+- `emulator -version`: 37.2.13.0 (build 16740729), ARM64 Mach-O
+- `emulator -accel-check`: Hypervisor.Framework available (exit status 0)
+- `adb devices -l`: emulator-5554 attached; no physical device attached
+- `adb -s emulator-5554 shell getprop sys.boot_completed`: 1
+- Emulator startup log reports boot completed in 15.2 seconds
+
+The current Android CLI reports that the legacy `sdkmanager --licenses` option is no longer needed. No APK was installed to a physical phone. Runtime tests completed; the project-local emulator was shut down afterward to release resources. Its installed AVD and all app data remain available for the next launch.

@@ -1,0 +1,47 @@
+ACCESSIBILITY MANAGER (dumpsys accessibility)
+
+currentUserId=0
+hasMagnificationConnection=false
+Magnifier on display#0
+    MagnificationConfig[mode: 1, activated: false, scale: 1.0, centerX: 0.0, centerY: 0.0] 
+    Magnification region=SkRegion((0,0,1080,2274))
+    IdOfLastServiceToMagnify=-1
+    SupportWindowMagnification=true
+    WindowMagnificationConnectionState=DISCONNECTED
+User state[
+     attributes:{id=0, touchExplorationEnabled=false, serviceHandlesDoubleTap=false, requestMultiFingerGestures=false, requestTwoFingerPassthrough=false, sendMotionEventsEnabledfalse, displayMagnificationEnabled=false, autoclickEnabled=false, nonInteractiveUiTimeout=0, interactiveUiTimeout=0, installedServiceCount=2, magnificationModes={0=1}, magnificationCapabilities=3, audioDescriptionByDefaultEnabled=false, magnificationFollowTypingEnabled=true, alwaysOnMagnificationEnabled=true}
+     shortcut key:{}
+     button:{}
+     button target:{null}
+     qs shortcut targets:{}
+     a11y tiles in QS panel:{}
+     Bound services:{Service[label=净屏 · 开屏跳过, feedbackType[FEEDBACK_GENERIC], capabilities=1, eventTypes=[TYPE_WINDOW_STATE_CHANGED, TYPE_WINDOW_CONTENT_CHANGED], notificationTimeout=100, requestA11yBtn=false]}
+     Enabled services:{{cn.civi.adshield/cn.civi.adshield.SkipAccessibilityService}}
+     Binding services:{}
+     Crashed services:{}
+     Client list info:{
+          Client list callbacks: 5
+          Client list killed: false
+          Client list broadcasts count: -1
+          Registered clients:{
+[com.android.launcher3][com.android.vpndialogs][cn.civi.adshield][cn.civi.adshield.fixture][com.android.inputmethod.latin]}]
+Global Info [ Top focused display Id = 0
+     Active Window Id = 293
+     Top Focused Window Id = 293
+     Accessibility Focused Window Id = -1 ]
+
+
+Window attributes:[{286=AccessibilityWindowAttributes{mAccessibilityWindowTitle=nullmLocales=[en_US]}, 287=AccessibilityWindowAttributes{mAccessibilityWindowTitle=净屏mLocales=[en_US]}, 288=AccessibilityWindowAttributes{mAccessibilityWindowTitle=净屏测试夹具mLocales=[en_US]}, 289=AccessibilityWindowAttributes{mAccessibilityWindowTitle=HomemLocales=[en_US]}, 290=AccessibilityWindowAttributes{mAccessibilityWindowTitle=Navigation barmLocales=[en_US]}, 291=AccessibilityWindowAttributes{mAccessibilityWindowTitle=nullmLocales=[en_US]}, 292=AccessibilityWindowAttributes{mAccessibilityWindowTitle=nullmLocales=[en_US]}, 293=AccessibilityWindowAttributes{mAccessibilityWindowTitle=AccessibilitymLocales=[en_US]}, 294=AccessibilityWindowAttributes{mAccessibilityWindowTitle=nullmLocales=[en_US]}, 295=AccessibilityWindowAttributes{mAccessibilityWindowTitle=nullmLocales=[en_US]}, 296=AccessibilityWindowAttributes{mAccessibilityWindowTitle=nullmLocales=[en_US]}}]
+Global client list info:{
+    Client list callbacks: 5
+    Client list killed: false
+    Client list broadcasts count: -1
+    Registered clients:{
+[com.android.localtransport, com.android.location.fused, android, com.android.inputdevices, com.android.emulator.multidisplay, com.android.settings, com.android.DeviceAsWebcam, com.android.keychain, com.android.dynsystem, com.android.providers.settings, com.android.server.telecom][com.android.systemui][com.android.permissioncontroller][com.android.documentsui][com.android.localtransport, com.android.location.fused, android, com.android.inputdevices, com.android.emulator.multidisplay, com.android.settings, com.android.DeviceAsWebcam, com.android.keychain, com.android.dynsystem, com.android.providers.settings, com.android.server.telecom]
+
+Proxy manager state:
+    Number of proxy connections: 0
+    Registered proxy connections:
+Accessibility Display Listener:
+    SystemUI uid: 10121
+    1 valid display: 0
