@@ -143,7 +143,7 @@ class Device:
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--serial',default='emulator-5554')
-    parser.add_argument('--apk',type=Path,default=ROOT/'dist/CiviAdShield-1.0.2.apk')
+    parser.add_argument('--apk',type=Path,default=ROOT/'dist/CiviAdShield-1.0.3.apk')
     parser.add_argument('--output',type=Path,default=ROOT/'docs/emulator-results')
     args=parser.parse_args()
     d=Device(args.serial,args.output)

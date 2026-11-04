@@ -10,6 +10,7 @@ android {
         targetSdk 35
         versionCode 1
         versionName '1.0-fixture'
+        testInstrumentationRunner 'cn.civi.adshield.fixture.UiSnapshotInstrumentation'
     }
 
     compileOptions {

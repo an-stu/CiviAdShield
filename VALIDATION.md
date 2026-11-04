@@ -1,61 +1,67 @@
-# v1.0.2 网络版验证记录
+# v1.0.3 网络规则改进验证记录
 
-日期：2026-11-03（Asia/Shanghai）。包名 `cn.civi.adshield`，versionName `1.0.2`，versionCode `3`，minSdk 26，compile/target SDK 35。沿用原项目签名。
+日期：2026-11-04（Asia/Shanghai）。包名 `cn.civi.adshield`，versionName `1.0.3`，versionCode `4`，minSdk 26，compile/target SDK 35。沿用原项目签名。
 
-## 实际测试分层
+## 真实贴吧帖子详情
 
-| 项目 | 结果 |
+使用官方贴吧 22.13.1.1（ARM64），在 Android 15 / API35 模拟器中未登录账号，进入公开帖子并连续下滑至回复区。通过正常“分享→复制链接”固定同一帖子；各轮清除模拟器内贴吧数据并重复相同隐私选择，减少应用缓存影响。生产净屏没有无障碍服务，未安装 CA，也未接管默认链接。
+
+| 样本 | 实际画面 |
 | --- | --- |
-| 真实官方贴吧 22.13.1.1 | 启动/公开“小米吧”页面及 DNS 场景已运行；见 docs/TIEBA.md |
-| Android 15 / API35 ARM64 模拟器 | 25 项网络版 GUI/网络检查通过；最终版 27 项同证书仪器检查通过 |
-| Android 16 / API36 ARM64 模拟器 | 网络版候选构建的 25 项 GUI/网络检查通过；最终 v1.0.2 27 项同证书仪器检查通过 |
-| 无障碍 | 生产 APK 无服务声明，系统开关关闭，网络过滤仍通过 |
-| 无效的仅指定应用 | 明确停止，不回退为全局 VPN；选择界面可清除已卸载项 |
-| Java 协议/规则测试 | 21/21 通过 |
-| Python 工具测试 | 20/20 通过（同步 11、PCAP 解析 9） |
-| 生产 Android Lint | 0 错误、3 条工具/SDK 版本提示；发布关键检查通过 |
-| 发布签名 | 原 RSA3072 证书 / APK v2，SHA256 指纹保持不变 |
+| 关闭过滤的首次基线 | 出现带“广告”标记的 50 元红包浮层、购物优惠推广回复和推广图片 |
+| 开启 AdGuard DNS + anti-AD | 本轮未出现红包浮层；推广回复及图片仍然存在，普通帖子/回复正常加载 |
+| 随后再次关闭过滤 | 本轮同样未出现红包浮层；推广回复及图片仍然存在 |
 
-平台证据保存在 `docs/emulator-results/release-1.0.2/api35/` 和 `api36/`：`results.json`、`instrumentation.txt` 及本应用截图。Android16 的完整 GUI 检查使用网络版候选构建；最终版另完成协议/生命周期/无障碍缺失/无效范围检查和界面恢复检查。不把候选版本截图冒充新的独立广告样本。
+**红包浮层不是稳定复现样本，不能将其消失归因于过滤。帖子回复中的商业内容仍未屏蔽。** 不把 DNS 拦截请求数量解释为去除广告数量，也没有验证全局禁止广告跳转。
 
-## 真实贴吧结果
+AdGuard 中文网页列表中的贴吧 DOM/CSS 规则依赖网页结构，不能在本应用的 DNS 层删除 Android 原生回复或卡片。当前实现没有集成 AdGuard 完整 HTTP(S) 过滤引擎。完整 AdGuard Android 应用的应用内过滤对照未完成，不以其效果为本应用背书。详见 [TIEBA.md](docs/TIEBA.md)。
 
-使用官方 Baidu 页面提供的 APK，签名验证通过；未登录个人账号。Launcher 显示登录入口，但 Manifest 声明的公开论坛 VIEW 路由可以正常打开“小米吧”。使用该入口检查公开帖子和图片。
+原始贴吧截图、UI 树、公开帖子链接和第三方 APK 仅保存在本机 `.toolchain/`，不随仓库或 Release 发布。开发测试使用 Android 仪器 UI 快照读取动态页面，这不属于生产应用权限或功能。
 
-仅过滤贴吧、无障碍关闭时，首次启动到公开吧页的本机拦截计数增加 84。对应的网络基线观察到 59 次命中列表的外发 UDP DNS 查询，过滤段外部抓包未见同类查询。具体域名及阶段解释见 [TIEBA.md](docs/TIEBA.md) 和脱敏 `summary.json`。
+## 规则和更新
 
-请求计数包含重试与跟踪，不是广告条数，也不计算拦截率。本次基线和过滤样本均未出现明确广告卡片，真实广告点击跳转没有可重复样本。因此没有把“贴吧信息流广告全部消失”或“所有广告跳转被禁止”判为通过。
+- 内置官方 AdGuard DNS 原始完整列表，SHA256 和 GPL-3.0 许可见 [第三方说明](THIRD_PARTY_NOTICES.md)。本次快照可执行 187396 条，忽略 940 条不支持规则，1 条被 badfilter 禁用。
+- 保留支持的例外、important、badfilter 语义；不支持的规则整行忽略，不剥除网址路径、修饰符、CSS、JS 或正则来制造域名规则。
+- 合并用户白名单、自定义阻断、AdGuard DNS、anti-AD；用户白名单最高优先。原查询获得明确放行时，不再单独因别名阻断。
+- 检查与原问题相关的 IN CNAME 回答链；拒绝畸形长度、循环及冲突别名，不使用无关回答污染规则判断。
+- 已实际点击“更新 AdGuard DNS 规则”，通过平台 HTTPS 成功下载官方列表，显示 187396 条可执行规则、940 条忽略规则。更新是用户主动操作。
 
-原始 PCAP、贴吧 APK、完整论坛截图与日志只留本机 `.toolchain/tieba-tests/`，不上传第三方用户帖子或认证数据。
+## 构建和设备回归
 
-## 本次改动与回归
+Java 单元测试 40 项通过，覆盖域名规则、AdGuard 例外/优先级/禁用规则、组合策略、CNAME 链及协议异常。Android Lint：0 错误，3 条工具/SDK 提示。发布 APK 沿用 RSA3072 证书，SHA256 指纹：
 
-- 删除无障碍服务、自动点击代码、入口和相关权限配置；升级清理旧跳过偏好，保留规则与次数。
-- 新增仅指定应用范围，与排除列表互斥；显式检查应用是否安装/启用，避免不同平台接受无效包名后仍显示运行。
-- 选择列表过滤已卸载项，用户能恢复全部应用范围。
-- 系统栏 Insets 作用于滚动视口，避免按钮落入导航栏；测试驱动也改为点击完全可见的控件。
-- 面向小米、Redmi、POCO 使用标准应用信息/省电设置及设备版本信息，无型号白名单和厂商隐藏 API。
-- 增加 PCAP UDP DNS 聚合工具及畸形数据、端序、链路层、压缩名、分片等测试。
+`d504ff6cb479a7267f003f387c2676dec60b9536744e08b7e5b6d485c89dd096`
 
-仪器测试验证 UDP A/AAAA、本地 DNS TCP、正常转发、白名单、Clash 导出、VPN 授权/路由就绪、暂停及三次重启，另检查无障碍服务缺失和无效目标不会成为全局 VPN。测试 APK 由同证书签名，生产应用保持 Release 配置。
+设备与工具最终结果见下表和 `docs/emulator-results/release-1.0.3/`。完整日志保持本机私有。
 
-## 兼容目标和未测范围
+| 检查 | 结果 |
+| --- | --- |
+| Android 15 / API35 ARM64，签名 v1.0.3 | GUI/网络 25/25，Release 仪器 27/27 |
+| Android 16 / API36 ARM64，签名 v1.0.3 | GUI/网络 25/25，Release 仪器 27/27 |
+| Java 单元测试 | 40/40，0 失败/错误/跳过 |
+| Python 同步与 PCAP 工具测试 | 20/20 |
+| 生产应用 Android Lint | 0 错误，3 条提示 |
 
-[COMPATIBILITY.md](docs/COMPATIBILITY.md) 记录 Android 8.0+ 的通用 API 目标及 Android15/16 AOSP 验收。没有小米真机，不能宣称逐一验证所有手机和 MIUI/HyperOS 版本；Android7.x及以前不在范围。后台保活、分身/工作配置和厂商安全策略需真机验证。
+GUI 检查包括真实 VPN/通知授权、UDP A/AAAA 与 TCP DNS、本地规则阻断、正常转发、自定义规则、白名单、暂停恢复联网、生产包无无障碍声明及无崩溃。仪器检查覆盖 VPN 路由与三次重启生命周期、导出例外和无效指定应用不会退化为全局 VPN。
 
-DNS 不能区分同域/接口内的广告与正常内容，不能处理缓存、硬编码 IP 或所有自带安全 DNS，也不能全局拦截其他应用显式发起的跳转。按用户选择，不提供默认链接接管。
+## 兼容与权限
 
-## 复现命令
+[COMPATIBILITY.md](docs/COMPATIBILITY.md) 记录 Android 8.0+ 通用 API 目标。Android 15/16 AOSP 模拟器不能替代小米真机验证；未连接 Civi5Pro / HyperOS 3.0.303.0，不宣称已覆盖所有 Xiaomi 系统与手机。
+
+所需权限见 [PERMISSIONS.md](PERMISSIONS.md)：VPN 连接授权、网络和前台服务，通知建议允许。本版未增加无障碍、Root、Shizuku、悬浮窗、默认链接或 CA 权限。Clash Meta 使用时须暂停净屏或将域名规则交由 Clash。
+
+## 复现
 
 ```sh
 ./tools/emulator.sh
 ./tools/emulator36.sh
+./tools/package.sh
 ./tools/build.sh :test-fixture:assembleDebug
-python3 tools/emulator-e2e.py --serial emulator-5554 --apk dist/CiviAdShield-1.0.2.apk --output .toolchain/reproduce35
+python3 tools/emulator-e2e.py --serial emulator-5554 --apk dist/CiviAdShield-1.0.3.apk --output .toolchain/reproduce35
+python3 tools/emulator-e2e.py --serial emulator-5556 --apk dist/CiviAdShield-1.0.3.apk --output .toolchain/reproduce36
 python3 tools/run-release-instrumentation.py --serial emulator-5554 --output .toolchain/instrumentation35.txt
 python3 tools/run-release-instrumentation.py --serial emulator-5556 --output .toolchain/instrumentation36.txt
 python3 -m unittest discover -s tests -p 'test_*.py'
-./tools/package.sh
 ```
 
-设备脚本拒绝对真实手机执行，会清理模拟器中的净屏/测试应用数据。仪器脚本需要本机签名，不在源码包中携带密钥。旧版 v1.0.1 无障碍测试材料仅为历史记录。
+设备脚本拒绝真实手机，并清理模拟器中的净屏及测试应用数据。仪器脚本使用本机签名，源码不携带密钥。v1.0.2 的吧页/网络样本属于历史结果，未被当作本次帖子详情的广告去除证据。

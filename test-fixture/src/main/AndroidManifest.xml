@@ -17,5 +17,6 @@
         <activity
             android:name=".NetworkProbeActivity"
             android:exported="true" />
+        <activity android:name=".ClipboardProbeActivity" android:exported="true" />
     </application>
 </manifest>

@@ -69,6 +69,8 @@ class LiveSyncPolicyTests(unittest.TestCase):
     def test_candidate_allowlist_and_pretracked_wrapper_exception(self):
         self.assertTrue(live_sync.is_candidate_path("app/src/main/A.java", False))
         self.assertTrue(live_sync.is_candidate_path("app/src/main/assets/rules.txt", False))
+        self.assertTrue(live_sync.is_candidate_path("app/src/main/assets/filters/adguard-dns-meta.json", False))
+        self.assertFalse(live_sync.is_candidate_path("app/src/main/assets/filters/other.json", False))
         self.assertTrue(live_sync.is_candidate_path("docs/SYNC.md", False))
         self.assertTrue(live_sync.is_candidate_path("docs/releases/v1.0.2.md", False))
         self.assertFalse(live_sync.is_candidate_path("docs/releases/token.key", False))

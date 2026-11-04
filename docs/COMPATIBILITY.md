@@ -7,7 +7,7 @@
 | 平台 | 验证方式 | 范围 |
 | --- | --- | --- |
 | Android 8.0 / API26 | minSdk、API 条件分支与 Lint 静态检查 | 未进行设备运行验证 |
-| Android 15 / API35 ARM64 | AOSP 模拟器 | 官方贴吧启动/公开吧页网络样本、DNS 拦截、正常内容、无障碍关闭 |
+| Android 15 / API35 ARM64 | AOSP 模拟器 | 官方贴吧启动/公开吧页及帖子详情下滑样本、DNS 拦截、正常内容、无障碍关闭 |
 | Android 16 / API36 ARM64 | AOSP 模拟器 | DNS/授权/白名单/启动停止等协议与界面验收，结果见 VALIDATION.md |
 | MIUI / HyperOS 真机 | 未连接设备 | 后台清理、省电、分身/用户空间、厂商 VPN 菜单待真机验证 |
 

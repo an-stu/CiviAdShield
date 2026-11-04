@@ -1,0 +1,11 @@
+{
+  "title": "AdGuard DNS filter",
+  "retrievedDate": "2026-11-04",
+  "upstreamLastModified": "2026-11-04T02:12:23.506Z",
+  "url": "https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt",
+  "homepage": "https://github.com/AdguardTeam/AdGuardSDNSFilter",
+  "license": "GPL-3.0",
+  "sha256": "b948c12b7bd42ae0e44476d6a65048955b4c79d707ff59937c8ada5eaa16952a",
+  "bytes": 4604305,
+  "source": "official-bundled"
+}

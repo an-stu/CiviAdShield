@@ -182,13 +182,24 @@ public final class AdVpnService extends VpnService {
                         socket.receive(reply);
                         byte[] response = Arrays.copyOf(data, reply.getLength());
                         if (!DnsCodec.isValidResponse(query, response)) continue;
-                        if ((response[2] & 2) != 0) return upstreamTcp(network, server, query);
-                        return response;
+                        if ((response[2] & 2) != 0) response=upstreamTcp(network, server, query);
+                        return applyAnswerPolicy(query,response);
                     }
                 } finally { sockets.remove(socket); }
             } catch (IOException ignored) { /* Try explicitly disclosed secondary resolver. */ }
         }
         throw new IOException("DNS 上游不可达");
+    }
+    private byte[] applyAnswerPolicy(byte[] query,byte[] response)throws IOException {
+        DnsCodec.Question q=DnsCodec.parseQuestion(query);
+        if(q.questionClass!=1)return response;
+        try {
+            if(RulesStore.get(this).policy.blocksAliases(q.domain,DnsCodec.cnameTargets(query,response))) {
+                AppState.blocked(this,q.domain);
+                return DnsCodec.blockedResponse(query);
+            }
+            return response;
+        } catch(IllegalArgumentException malformed) {return DnsCodec.errorResponse(query,2);}
     }
     private byte[] upstreamTcp(Network network, String server, byte[] query) throws IOException {
         try (Socket socket = new Socket()) {

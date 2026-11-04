@@ -6,5 +6,5 @@
     <string name="scope_excluded">配置范围：全部应用，排除 %1$d 个（修改后重启拦截生效）</string>
     <string name="network_scope_title">网络级拦截范围</string>
     <string name="network_scope_description">净屏按 DNS 请求拦截已知广告域名和落地页域名。与正常 API 共用域名、缓存广告或应用内嵌广告仍可能出现。网络拦截无法全局阻止其他应用显式拉起应用。</string>
-    <string name="rules_summary">内置 anti-AD %1$d 条 · 自定义 %2$d 条 · 白名单 %3$d 条\n内置版本 20261102061401 · 白名单优先</string>
+    <string name="rules_summary">AdGuard DNS %1$d 条 · 忽略 %2$d 条\nanti-AD %3$d 条 · 自定义 %4$d 条 · 白名单 %5$d 条\n%6$s · 用户白名单优先</string>
 </resources>

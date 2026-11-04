@@ -16,7 +16,7 @@ def main():
     global SERIAL
     parser=argparse.ArgumentParser()
     parser.add_argument('--serial',default='emulator-5554')
-    parser.add_argument('--output',type=Path,default=ROOT/'docs/emulator-results/release-1.0.2/instrumentation.txt')
+    parser.add_argument('--output',type=Path,default=ROOT/'.toolchain/release-1.0.3/instrumentation.txt')
     args=parser.parse_args();SERIAL=args.serial
     assert adb('shell','getprop','ro.kernel.qemu').stdout.strip()=='1','Emulator required'
     subprocess.run([str(ROOT/'tools/build.sh'),':app:assembleDebugAndroidTest','--console=plain'],cwd=ROOT,check=True)

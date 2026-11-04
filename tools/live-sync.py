@@ -136,6 +136,8 @@ def is_candidate_path(relative: str, tracked: bool) -> bool:
         return False
     if Path(name).suffix in SECRET_EXTENSIONS:
         return False
+    if relative == "app/src/main/assets/filters/adguard-dns-meta.json":
+        return True
     if relative == "gradle/wrapper/gradle-wrapper.jar":
         return tracked
     if len(parts) == 1 and relative in ALLOWED_ROOT_FILES:

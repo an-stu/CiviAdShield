@@ -1,11 +1,21 @@
 package cn.civi.adshield.core;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 /** Small, dependency-free DNS wire-format helpers for UDP DNS messages. */
 public final class DnsCodec {
     private static final int DNS_HEADER_LENGTH = 12;
     private static final int MAX_NAME_LENGTH = 255;
+    private static final int TYPE_CNAME = 5;
+    private static final int CLASS_IN = 1;
+    private static final int MAX_CNAME_HOPS = 64;
 
     private DnsCodec() {
     }
@@ -131,6 +141,89 @@ public final class DnsCodec {
         } catch (IllegalArgumentException ignored) {
             return false;
         }
+    }
+
+    /**
+     * Returns the CNAME targets reachable from the original question through answer records.
+     * Only IN-class CNAME records in the answer section participate. A response must first
+     * correlate structurally with the query; truncated or negative responses have no targets.
+     *
+     * @throws IllegalArgumentException if the response is not valid for {@code query}, a CNAME
+     *                                  RDATA is malformed, records conflict, or the reachable
+     *                                  chain loops or exceeds 64 hops
+     */
+    public static List<String> cnameTargets(byte[] query, byte[] response) {
+        if (!isValidResponse(query, response)) {
+            throw malformed("DNS response is not valid for query");
+        }
+
+        int flags = u16(response, 2);
+        if ((flags & 0x0200) != 0 || (flags & 0x000f) != 0) {
+            return Collections.emptyList();
+        }
+
+        Question question = parseQuestion(query);
+        Name responseQuestion = readName(response, DNS_HEADER_LENGTH, true);
+        int cursor = responseQuestion.end;
+        if (cursor > response.length - 4) {
+            throw malformed("truncated DNS response question");
+        }
+        cursor += 4;
+
+        Map<String, String> cnameByOwner = new HashMap<>();
+        int answerCount = u16(response, 6);
+        for (int i = 0; i < answerCount; i++) {
+            Name owner = readName(response, cursor, true);
+            cursor = owner.end;
+            if (cursor > response.length - 10) {
+                throw malformed("truncated DNS answer record");
+            }
+            int type = u16(response, cursor);
+            int recordClass = u16(response, cursor + 2);
+            int rdLength = u16(response, cursor + 8);
+            cursor += 10;
+            if (rdLength > response.length - cursor) {
+                throw malformed("truncated DNS answer data");
+            }
+
+            if (type == TYPE_CNAME && recordClass == CLASS_IN) {
+                Name target = readName(response, cursor, true);
+                if (target.end - cursor != rdLength) {
+                    throw malformed("CNAME RDLENGTH does not match encoded target name");
+                }
+                String ownerName = owner.domain.toLowerCase(Locale.ROOT);
+                String targetName = target.domain.toLowerCase(Locale.ROOT);
+                String previous = cnameByOwner.get(ownerName);
+                if (previous != null && !previous.equals(targetName)) {
+                    throw malformed("conflicting CNAME targets for one owner");
+                }
+                if (previous == null) {
+                    cnameByOwner.put(ownerName, targetName);
+                }
+            }
+            cursor += rdLength;
+        }
+
+        String current = question.domain.toLowerCase(Locale.ROOT);
+        Set<String> visited = new HashSet<>();
+        visited.add(current);
+        List<String> targets = new ArrayList<>();
+        for (int hop = 0; hop < MAX_CNAME_HOPS; hop++) {
+            String target = cnameByOwner.get(current);
+            if (target == null) {
+                return targets.isEmpty() ? Collections.emptyList()
+                        : Collections.unmodifiableList(targets);
+            }
+            if (!visited.add(target)) {
+                throw malformed("CNAME chain contains a cycle");
+            }
+            targets.add(target);
+            current = target;
+        }
+        if (cnameByOwner.containsKey(current)) {
+            throw malformed("CNAME chain exceeds 64 hops");
+        }
+        return targets.isEmpty() ? Collections.emptyList() : Collections.unmodifiableList(targets);
     }
 
     private static int validateResourceRecords(byte[] message, int cursor, int count) {

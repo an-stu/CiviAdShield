@@ -1,0 +1,332 @@
+[
+  {
+    "test": "signed release launches",
+    "passed": true,
+    "detail": null
+  },
+  {
+    "test": "baseline / udp_a",
+    "passed": true,
+    "detail": {
+      "transport": "udp",
+      "recordType": "A",
+      "id": 56900,
+      "question": "example.com",
+      "valid": true,
+      "matchedId": 56900,
+      "matchedQuestion": "example.com",
+      "rcode": 0,
+      "answerCount": 1,
+      "durationMillis": 6
+    }
+  },
+  {
+    "test": "baseline / udp_aaaa",
+    "passed": true,
+    "detail": {
+      "transport": "udp",
+      "recordType": "AAAA",
+      "id": 51006,
+      "question": "example.com",
+      "valid": true,
+      "matchedId": 51006,
+      "matchedQuestion": "example.com",
+      "rcode": 0,
+      "answerCount": 0,
+      "durationMillis": 9
+    }
+  },
+  {
+    "test": "baseline / tcp_a",
+    "passed": true,
+    "detail": {
+      "transport": "tcp",
+      "recordType": "A",
+      "id": 19685,
+      "question": "example.com",
+      "valid": true,
+      "matchedId": 19685,
+      "matchedQuestion": "example.com",
+      "rcode": 0,
+      "answerCount": 1,
+      "durationMillis": 5
+    }
+  },
+  {
+    "test": "VPN starts after real consent",
+    "passed": true,
+    "detail": null
+  },
+  {
+    "test": "builtin-ad / udp_a",
+    "passed": true,
+    "detail": {
+      "transport": "udp",
+      "recordType": "A",
+      "id": 20040,
+      "question": "ad.xiaomi.com",
+      "valid": true,
+      "matchedId": 20040,
+      "matchedQuestion": "ad.xiaomi.com",
+      "rcode": 0,
+      "answerCount": 0,
+      "durationMillis": 8
+    }
+  },
+  {
+    "test": "builtin-ad / udp_aaaa",
+    "passed": true,
+    "detail": {
+      "transport": "udp",
+      "recordType": "AAAA",
+      "id": 43444,
+      "question": "ad.xiaomi.com",
+      "valid": true,
+      "matchedId": 43444,
+      "matchedQuestion": "ad.xiaomi.com",
+      "rcode": 0,
+      "answerCount": 0,
+      "durationMillis": 1
+    }
+  },
+  {
+    "test": "builtin-ad / tcp_a",
+    "passed": true,
+    "detail": {
+      "transport": "tcp",
+      "recordType": "A",
+      "id": 1740,
+      "question": "ad.xiaomi.com",
+      "valid": true,
+      "matchedId": 1740,
+      "matchedQuestion": "ad.xiaomi.com",
+      "rcode": 0,
+      "answerCount": 0,
+      "durationMillis": 2
+    }
+  },
+  {
+    "test": "normal / udp_a",
+    "passed": true,
+    "detail": {
+      "transport": "udp",
+      "recordType": "A",
+      "id": 42497,
+      "question": "example.com",
+      "valid": true,
+      "matchedId": 42497,
+      "matchedQuestion": "example.com",
+      "rcode": 0,
+      "answerCount": 1,
+      "durationMillis": 5
+    }
+  },
+  {
+    "test": "normal / udp_aaaa",
+    "passed": true,
+    "detail": {
+      "transport": "udp",
+      "recordType": "AAAA",
+      "id": 36671,
+      "question": "example.com",
+      "valid": true,
+      "matchedId": 36671,
+      "matchedQuestion": "example.com",
+      "rcode": 0,
+      "answerCount": 0,
+      "durationMillis": 28
+    }
+  },
+  {
+    "test": "normal / tcp_a",
+    "passed": true,
+    "detail": {
+      "transport": "tcp",
+      "recordType": "A",
+      "id": 49441,
+      "question": "example.com",
+      "valid": true,
+      "matchedId": 49441,
+      "matchedQuestion": "example.com",
+      "rcode": 0,
+      "answerCount": 1,
+      "durationMillis": 18
+    }
+  },
+  {
+    "test": "custom-block / udp_a",
+    "passed": true,
+    "detail": {
+      "transport": "udp",
+      "recordType": "A",
+      "id": 35454,
+      "question": "example.com",
+      "valid": true,
+      "matchedId": 35454,
+      "matchedQuestion": "example.com",
+      "rcode": 0,
+      "answerCount": 0,
+      "durationMillis": 6
+    }
+  },
+  {
+    "test": "custom-block / udp_aaaa",
+    "passed": true,
+    "detail": {
+      "transport": "udp",
+      "recordType": "AAAA",
+      "id": 28006,
+      "question": "example.com",
+      "valid": true,
+      "matchedId": 28006,
+      "matchedQuestion": "example.com",
+      "rcode": 0,
+      "answerCount": 0,
+      "durationMillis": 11
+    }
+  },
+  {
+    "test": "custom-block / tcp_a",
+    "passed": true,
+    "detail": {
+      "transport": "tcp",
+      "recordType": "A",
+      "id": 15073,
+      "question": "example.com",
+      "valid": true,
+      "matchedId": 15073,
+      "matchedQuestion": "example.com",
+      "rcode": 0,
+      "answerCount": 0,
+      "durationMillis": 9
+    }
+  },
+  {
+    "test": "whitelist / udp_a",
+    "passed": true,
+    "detail": {
+      "transport": "udp",
+      "recordType": "A",
+      "id": 49935,
+      "question": "example.com",
+      "valid": true,
+      "matchedId": 49935,
+      "matchedQuestion": "example.com",
+      "rcode": 0,
+      "answerCount": 1,
+      "durationMillis": 8
+    }
+  },
+  {
+    "test": "whitelist / udp_aaaa",
+    "passed": true,
+    "detail": {
+      "transport": "udp",
+      "recordType": "AAAA",
+      "id": 20794,
+      "question": "example.com",
+      "valid": true,
+      "matchedId": 20794,
+      "matchedQuestion": "example.com",
+      "rcode": 0,
+      "answerCount": 0,
+      "durationMillis": 23
+    }
+  },
+  {
+    "test": "whitelist / tcp_a",
+    "passed": true,
+    "detail": {
+      "transport": "tcp",
+      "recordType": "A",
+      "id": 5428,
+      "question": "example.com",
+      "valid": true,
+      "matchedId": 5428,
+      "matchedQuestion": "example.com",
+      "rcode": 0,
+      "answerCount": 1,
+      "durationMillis": 12
+    }
+  },
+  {
+    "test": "VPN pause updates UI",
+    "passed": true,
+    "detail": null
+  },
+  {
+    "test": "after-pause / udp_a",
+    "passed": true,
+    "detail": {
+      "transport": "udp",
+      "recordType": "A",
+      "id": 51742,
+      "question": "example.com",
+      "valid": true,
+      "matchedId": 51742,
+      "matchedQuestion": "example.com",
+      "rcode": 0,
+      "answerCount": 1,
+      "durationMillis": 3
+    }
+  },
+  {
+    "test": "after-pause / udp_aaaa",
+    "passed": true,
+    "detail": {
+      "transport": "udp",
+      "recordType": "AAAA",
+      "id": 20851,
+      "question": "example.com",
+      "valid": true,
+      "matchedId": 20851,
+      "matchedQuestion": "example.com",
+      "rcode": 0,
+      "answerCount": 0,
+      "durationMillis": 1
+    }
+  },
+  {
+    "test": "after-pause / tcp_a",
+    "passed": true,
+    "detail": {
+      "transport": "tcp",
+      "recordType": "A",
+      "id": 7317,
+      "question": "example.com",
+      "valid": true,
+      "matchedId": 7317,
+      "matchedQuestion": "example.com",
+      "rcode": 0,
+      "answerCount": 1,
+      "durationMillis": 4
+    }
+  },
+  {
+    "test": "normal system networking after pause",
+    "passed": true,
+    "detail": {
+      "host": "example.com",
+      "valid": true,
+      "addresses": [
+        "198.18.0.102"
+      ],
+      "durationMillis": 13
+    }
+  },
+  {
+    "test": "production APK has no accessibility service",
+    "passed": true,
+    "detail": null
+  },
+  {
+    "test": "network protection tested with accessibility disabled",
+    "passed": true,
+    "detail": null
+  },
+  {
+    "test": "no AndroidRuntime crashes in test log",
+    "passed": true,
+    "detail": null
+  }
+]

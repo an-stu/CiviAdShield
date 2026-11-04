@@ -14,6 +14,7 @@ import android.text.*;
 import android.view.*;
 import android.widget.*;
 import cn.civi.adshield.core.DomainRules;
+import cn.civi.adshield.core.AdGuardDnsRules;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
@@ -25,6 +26,7 @@ public final class MainActivity extends Activity {
     private TextView status, counters, ruleCount, scopeStatus;
     private Button vpnButton;
     private LinearLayout content;
+    private boolean updatingSubscription;
     private final Runnable refresh = new Runnable() { public void run() { updateStatus(); handler.postDelayed(this, 1000); } };
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -55,10 +57,13 @@ public final class MainActivity extends Activity {
         LinearLayout rules = card();
         label(rules, "拦截规则", 21, INK, true);
         ruleCount = label(rules, "正在加载内置规则…", 14, MUTED, false);
+        button(rules, "规则来源与开关", this::showRuleSources);
+        button(rules, "更新 AdGuard DNS 规则", this::updateAdGuard);
+        button(rules, "导入 AdGuard DNS 列表", () -> importRules(501));
         button(rules, "最近拦截 · 一键加入白名单", this::showBlocked);
         button(rules, "编辑白名单", () -> editRules(true));
         button(rules, "添加自定义域名", () -> editRules(false));
-        button(rules, "导入域名 / hosts 规则", this::importRules);
+        button(rules, "导入域名 / hosts 规则", () -> importRules(500));
         button(rules, "仅拦截指定应用（可选）", () -> chooseApps(true));
         button(rules, "排除应用（不拦截其 DNS）", () -> chooseApps(false));
         LinearLayout clash = card();
@@ -123,6 +128,17 @@ public final class MainActivity extends Activity {
         if (request==100) { if(result==RESULT_OK) launchVpn(); else { AppState.status="未授权 VPN"; updateStatus(); } return; }
         if (result!=RESULT_OK || data==null || data.getData()==null) return;
         Uri uri=data.getData();
+        if(request==501) background(() -> {
+            try(InputStream in=getContentResolver().openInputStream(uri)) {
+                if(in==null)throw new IOException("无法读取文件");
+                String text=RulesStore.readLimited(in);AdGuardDnsRules rules=AdGuardDnsRules.load(new StringReader(text));
+                if(rules.acceptedRules()==0)throw new IOException("没有可执行 DNS 规则。网页 CSS、JS 或网址路径规则不能在此执行。");
+                return new AdGuardImport(text,rules.acceptedRules(),rules.ignoredRules());
+            }
+        }, value -> new AlertDialog.Builder(this).setTitle("导入 DNS 订阅")
+            .setMessage("可执行 "+value.accepted+" 条，忽略 "+value.ignored+" 条不支持的规则。将替换 AdGuard DNS 订阅，不影响自定义域名和白名单。网页元素和网址规则不会因此生效。")
+            .setPositiveButton("导入 DNS 部分",(d,w) -> background(() -> RulesStore.installAdGuard(this,value.text,"local-import"),g -> {toast("DNS 订阅已导入");updateRuleCount();}))
+            .setNegativeButton("取消",null).show());
         if (request==500) background(() -> {
             try (InputStream in=getContentResolver().openInputStream(uri)) {
                 if (in==null) throw new IOException("无法读取文件");
@@ -137,16 +153,40 @@ public final class MainActivity extends Activity {
         if(request==600) background(() -> { try(OutputStream out=getContentResolver().openOutputStream(uri,"wt")) { if(out==null) throw new IOException("无法写入文件"); RulesStore.exportClash(this,out); } return true; }, ok -> message("已导出", "请将规则文件交给 Clash Meta，并按接入说明添加 rule-provider 与 RULE-SET。此文件是域名规则集，不能直接作为完整订阅导入。"));
     }
     private record ImportData(String text,int count) {}
-    private void importRules() {
+    private record AdGuardImport(String text,int accepted,int ignored) {}
+    private void importRules(int request) {
         Intent intent=new Intent(Intent.ACTION_OPEN_DOCUMENT).setType("*/*").addCategory(Intent.CATEGORY_OPENABLE);
-        startActivityForResult(intent,500);
+        startActivityForResult(intent,request);
     }
     private void exportClash() {
         Intent intent=new Intent(Intent.ACTION_CREATE_DOCUMENT).setType("application/yaml").addCategory(Intent.CATEGORY_OPENABLE).putExtra(Intent.EXTRA_TITLE,"civi-ads.yaml");
         startActivityForResult(intent,600);
     }
     private void updateRuleCount() { background(() -> RulesStore.get(this), this::showRuleCount); }
-    private void showRuleCount(RulesStore.Snapshot s) { ruleCount.setText(getString(R.string.rules_summary, s.base.size(), s.custom.size(), s.allow.size())); }
+    private void showRuleCount(RulesStore.Snapshot s) { ruleCount.setText(getString(R.string.rules_summary,
+        s.adguardEnabled?s.adguard.acceptedRules():0,s.adguard.ignoredRules(),s.antiEnabled?s.base.size():0,s.custom.size(),s.allow.size(),s.adguardDescription)); }
+    private void showRuleSources() {
+        background(() -> RulesStore.get(this),s -> {
+            boolean[] selected={s.adguardEnabled,s.antiEnabled};
+            new AlertDialog.Builder(this).setTitle("DNS 规则来源")
+                .setMultiChoiceItems(new String[]{"AdGuard DNS · "+s.adguard.acceptedRules()+" 条","anti-AD · "+s.base.size()+" 条"},selected,(d,which,on)->selected[which]=on)
+                .setPositiveButton("保存",(d,w)-> background(() -> {
+                    AppState.prefs(this).edit().putBoolean("filter_adguard_dns",selected[0]).putBoolean("filter_anti_ad",selected[1]).apply();
+                    return RulesStore.reload(this);
+                },this::showRuleCount))
+                .setNeutralButton("来源与许可",(d,w)->background(() -> {
+                    try(InputStream in=getAssets().open("licenses/ADGUARD-DNS-GPL-3.0.txt")){return RulesStore.readLimited(in);}
+                },license->message("AdGuard DNS · GPL-3.0","公开规则来源：\nhttps://github.com/AdguardTeam/AdGuardSDNSFilter\n\n支持 DNS 域名、例外、important 和 badfilter。网址路径、CSS/JS 和正则等不支持规则忽略；自定义域名和用户白名单优先。切换仅影响新 DNS 请求，缓存广告可能继续显示。\n\n本应用没有集成 AdGuard 的完整 HTTP(S) 过滤引擎。\n\n"+license)))
+                .setNegativeButton("取消",null).show();
+        });
+    }
+    private void updateAdGuard() {
+        if(updatingSubscription){toast("正在更新，请稍候");return;}
+        updatingSubscription=true;toast("正在通过 HTTPS 下载官方 DNS 列表");
+        background(() -> {try{return AdGuardSubscription.update(this);}finally{handler.post(() -> updatingSubscription=false);}},rules -> {
+            message("AdGuard DNS 已更新","可执行 "+rules.acceptedRules()+" 条；忽略 "+rules.ignoredRules()+" 条不支持规则。仅影响新 DNS 请求，不能据此判断帖子广告卡片是否消失。");updateRuleCount();
+        });
+    }
     private void editRules(boolean allow) {
         background(() -> RulesStore.read(this,allow), text -> {
             if(text.length()>200000) { message("规则文件较大", "请使用文件导入替换自定义规则，避免编辑大量文本导致卡顿。"); return; }

@@ -65,7 +65,7 @@ def publish():
     note=ROOT/'docs/releases'/f'{tag}.md'
     if not note.exists():
         note=out/'release-notes.md'
-        note.write_text(f'# 净屏 {tag}\n\nAndroid 8.0+，免 Root。广告域名拦截使用本地 VPN；无障碍仅用于可选的开屏跳过。\n\n源码提交：`{info["commit"]}`\n\n[权限说明](https://github.com/{REPO}/blob/{tag}/PERMISSIONS.md)\n\n已完成云端单元测试与静态检查；手机上的具体应用及 HyperOS 行为请按需验证。\n')
+        note.write_text(f'# 净屏 {tag}\n\nAndroid 8.0+，免 Root。广告域名拦截使用本地 VPN；不使用无障碍或默认链接接管。\n\n源码提交：`{info["commit"]}`\n\n[权限说明](https://github.com/{REPO}/blob/{tag}/PERMISSIONS.md)\n\n已完成云端单元测试与静态检查；手机上的具体应用及 HyperOS 行为请按需验证。\n')
     command=['gh','release','create',tag,'--repo',REPO,'--target',info['commit'],'--title','净屏 '+tag,'--notes-file',str(note),str(out/info['apk']),str(out/'SHA256SUMS.txt'),str(out/'release-info.json')]
     if '-' in info['versionName']:command.append('--prerelease')
     subprocess.run(command,check=True)
